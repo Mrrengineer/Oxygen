@@ -335,7 +335,6 @@
             box-shadow: 0 8px 25px rgba(0, 204, 255, 0.6);
         }
 
-       Sat Jul 10 09:16:50 UTC 2025
         .pricing-info {
             max-width: 800px;
             margin: 40px auto;
@@ -417,7 +416,7 @@
         @keyframes pulse {
             0% { text-shadow: 0 0 15px rgba(0, 204, 255, 0.7); }
             50% { text-shadow: 0 0 25px rgba(0, 204, 255, 0.9), 0 0 35px rgba(0, 204, 255, 0.6); }
-            100% { text-shadow: 0 0 15px rgba(0, 204, 255, 0転職
+            100% { text-shadow: 0 0 15px rgba(0, 204, 255, 0.7); }
         }
 
         @keyframes fadeIn {
@@ -468,7 +467,7 @@
                         <label for="controllers-ps4-1">تعداد دسته‌ها</label>
                         <select id="controllers-ps4-1" onchange="updateControllers('ps4-1')">
                             <option value="1">1 دسته</option>
-                            <option value="2">2 دسته{keyword
+                            <option value="2">2 دسته</option>
                             <option value="3">3 دسته</option>
                             <option value="4">4 دسته</option>
                         </select>
@@ -582,7 +581,7 @@
                         <div class="result-value" id="value-ps4-3">0 تومان</div>
                     </div>
                 </div>
-</div>
+            </div>
 
             <!-- دستگاه 1 PS5 -->
             <div class="device-card">
@@ -641,14 +640,14 @@
                     <h4 class="pricing-card-title">دستگاه‌های PS4</h4>
                     <div class="pricing-card-content">
                         <p>هزینه پایه: <span class="highlight">50,000 تومان</span> برای هر ساعت (60 دقیقه)</p>
-                        <p>هزینه هر دسته اضافه: <span class="highlight">20,000 تومان</span> به ازای هر ساعت</p>
+                        <p>هزینه هر دسته اضافه: <span class="highlight">10,000 تومان</span> به ازای هر ساعت</p>
                     </div>
                 </div>
                 <div class="pricing-card">
                     <h4 class="pricing-card-title">دستگاه‌های PS5</h4>
                     <div class="pricing-card-content">
-                        <p>هزینه پایه: <span class="highlight">70,000 تومان</span> برای هر ساعت (60 دقیقه)</p>
-                        <p>هزینه هر دسته اضافه: <span class="highlight">30,000 تومان</span> به ازای هر ساعت</p>
+                        <p>هزینه پایه: <span class="highlight">60,000 تومان</span> برای هر ساعت (60 دقیقه)</p>
+                        <p>هزینه هر دسته اضافه: <span class="highlight">10,000 تومان</span> به ازای هر ساعت</p>
                     </div>
                 </div>
             </div>
@@ -765,11 +764,11 @@
             // تعیین نرخ‌ها بر اساس نوع دستگاه
             let baseRate, extraControllerRate;
             if (deviceId.includes('ps4')) {
-                baseRate = 50000;
-                extraControllerRate = 20000;
+                baseRate = 50000; // 50,000 تومان برای PS4
+                extraControllerRate = 10000; // 10,000 تومان برای هر دسته اضافه
             } else {
-                baseRate = 70000;
-                extraControllerRate = 30000;
+                baseRate = 60000; // 60,000 تومان برای PS5
+                extraControllerRate = 10000; // 10,000 تومان برای هر دسته اضافه
             }
             
             // محاسبه هزینه اضافه دسته‌ها
