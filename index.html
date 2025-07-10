@@ -335,6 +335,7 @@
             box-shadow: 0 8px 25px rgba(0, 204, 255, 0.6);
         }
 
+       Sat Jul 10 09:16:50 UTC 2025
         .pricing-info {
             max-width: 800px;
             margin: 40px auto;
@@ -416,7 +417,7 @@
         @keyframes pulse {
             0% { text-shadow: 0 0 15px rgba(0, 204, 255, 0.7); }
             50% { text-shadow: 0 0 25px rgba(0, 204, 255, 0.9), 0 0 35px rgba(0, 204, 255, 0.6); }
-            100% { text-shadow: 0 0 15px rgba(0, 204, 255, 0.7); }
+            100% { text-shadow: 0 0 15px rgba(0, 204, 255, 0転職
         }
 
         @keyframes fadeIn {
@@ -465,9 +466,9 @@
                 <div class="device-content">
                     <div class="form-group">
                         <label for="controllers-ps4-1">تعداد دسته‌ها</label>
-                        <select id="controllers-ps4-1">
+                        <select id="controllers-ps4-1" onchange="updateControllers('ps4-1')">
                             <option value="1">1 دسته</option>
-                            <option value="2">2 دسته</option>
+                            <option value="2">2 دسته{keyword
                             <option value="3">3 دسته</option>
                             <option value="4">4 دسته</option>
                         </select>
@@ -508,7 +509,7 @@
                 <div class="device-content">
                     <div class="form-group">
                         <label for="controllers-ps4-2">تعداد دسته‌ها</label>
-                        <select id="controllers-ps4-2">
+                        <select id="controllers-ps4-2" onchange="updateControllers('ps4-2')">
                             <option value="1">1 دسته</option>
                             <option value="2">2 دسته</option>
                             <option value="3">3 دسته</option>
@@ -551,7 +552,7 @@
                 <div class="device-content">
                     <div class="form-group">
                         <label for="controllers-ps4-3">تعداد دسته‌ها</label>
-                        <select id="controllers-ps4-3">
+                        <select id="controllers-ps4-3" onchange="updateControllers('ps4-3')">
                             <option value="1">1 دسته</option>
                             <option value="2">2 دسته</option>
                             <option value="3">3 دسته</option>
@@ -581,7 +582,7 @@
                         <div class="result-value" id="value-ps4-3">0 تومان</div>
                     </div>
                 </div>
-            </div>
+</div>
 
             <!-- دستگاه 1 PS5 -->
             <div class="device-card">
@@ -594,7 +595,7 @@
                 <div class="device-content">
                     <div class="form-group">
                         <label for="controllers-ps5-1">تعداد دسته‌ها</label>
-                        <select id="controllers-ps5-1">
+                        <select id="controllers-ps5-1" onchange="updateControllers('ps5-1')">
                             <option value="1">1 دسته</option>
                             <option value="2">2 دسته</option>
                             <option value="3">3 دسته</option>
@@ -659,12 +660,12 @@
     </div>
 
     <script>
-        // شیء برای ذخیره وضعیت تایمرهای هر دستگاه
+        // شیء برای ذخیره وضعیت تایمرها و تاریخچه دسته‌ها برای هر دستگاه
         const deviceTimers = {
-            'ps4-1': { startTime: 0, elapsed: 0, intervalId: null, running: false },
-            'ps4-2': { startTime: 0, elapsed: 0, intervalId: null, running: false },
-            'ps4-3': { startTime: 0, elapsed: 0, intervalId: null, running: false },
-            'ps5-1': { startTime: 0, elapsed: 0, intervalId: null, running: false }
+            'ps4-1': { startTime: 0, elapsed: 0, intervalId: null, running: false, controllerHistory: [], totalCost: 0 },
+            'ps4-2': { startTime: 0, elapsed: 0, intervalId: null, running: false, controllerHistory: [], totalCost: 0 },
+            'ps4-3': { startTime: 0, elapsed: 0, intervalId: null, running: false, controllerHistory: [], totalCost: 0 },
+            'ps5-1': { startTime: 0, elapsed: 0, intervalId: null, running: false, controllerHistory: [], totalCost: 0 }
         };
 
         // تابع شروع تایمر برای دستگاه
@@ -674,6 +675,10 @@
             if (!timer.running) {
                 // مخفی کردن نتیجه قبلی
                 document.getElementById(`result-${deviceId}`).classList.remove('active');
+                
+                // ثبت تعداد دسته‌ها در زمان شروع
+                const controllers = parseInt(document.getElementById(`controllers-${deviceId}`).value);
+                timer.controllerHistory.push({ controllers: controllers, time: Date.now() });
                 
                 // شروع تایمر
                 timer.startTime = Date.now() - timer.elapsed;
@@ -689,6 +694,18 @@
                 
                 // افزودن انیمیشن به دستگاه
                 document.querySelector(`#timer-${deviceId}`).parentElement.style.animation = "glow 2s infinite";
+            }
+        }
+
+        // تابع به‌روزرسانی تعداد دسته‌ها
+        function updateControllers(deviceId) {
+            const timer = deviceTimers[deviceId];
+            if (timer.running) {
+                // محاسبه هزینه برای دوره قبلی قبل از تغییر تعداد دسته‌ها
+                calculateCostForPeriod(deviceId);
+                // ثبت تعداد دسته‌های جدید و زمان تغییر
+                const controllers = parseInt(document.getElementById(`controllers-${deviceId}`).value);
+                timer.controllerHistory.push({ controllers: controllers, time: Date.now() });
             }
         }
 
@@ -708,8 +725,12 @@
                 // حذف انیمیشن از دستگاه
                 document.querySelector(`#timer-${deviceId}`).parentElement.style.animation = "none";
                 
-                // محاسبه هزینه
-                calculateCost(deviceId);
+                // محاسبه هزینه برای دوره آخر
+                calculateCostForPeriod(deviceId);
+                
+                // نمایش هزینه کل
+                document.getElementById(`value-${deviceId}`).textContent = timer.totalCost.toLocaleString('fa-IR') + ' تومان';
+                document.getElementById(`result-${deviceId}`).classList.add('active');
             }
         }
 
@@ -725,20 +746,24 @@
                 `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        // تابع محاسبه هزینه
-        function calculateCost(deviceId) {
+        // تابع محاسبه هزینه برای یک دوره خاص
+        function calculateCostForPeriod(deviceId) {
             const timer = deviceTimers[deviceId];
-            const controllers = parseInt(document.getElementById(`controllers-${deviceId}`).value);
+            const history = timer.controllerHistory;
+            if (history.length < 1) return;
             
-            // محاسبه دقیقه‌ها
-            const minutes = Math.ceil(timer.elapsed / 60000);
+            // گرفتن اطلاعات دوره آخر
+            const currentPeriod = history[history.length - 1];
+            const startTime = currentPeriod.time;
+            const controllers = currentPeriod.controllers;
             
-            // محاسبه ساعت‌ها (به صورت اعشاری)
+            // محاسبه زمان پایان دوره (زمان فعلی یا زمان تغییر دسته بعدی)
+            const endTime = history.length > 1 && timer.running ? history[history.length - 2].time : Date.now();
+            const minutes = Math.ceil((endTime - startTime) / 60000);
             const hours = minutes / 60;
             
             // تعیین نرخ‌ها بر اساس نوع دستگاه
             let baseRate, extraControllerRate;
-            
             if (deviceId.includes('ps4')) {
                 baseRate = 50000;
                 extraControllerRate = 20000;
@@ -751,12 +776,14 @@
             const extraControllers = Math.max(0, controllers - 1);
             const extraControllerCost = extraControllers * extraControllerRate * hours;
             
-            // محاسبه هزینه کل
-            const totalCost = Math.floor((baseRate * hours) + extraControllerCost);
+            // محاسبه هزینه کل دوره
+            const periodCost = Math.floor((baseRate * hours) + extraControllerCost);
+            timer.totalCost += periodCost;
             
-            // نمایش نتیجه
-            document.getElementById(`value-${deviceId}`).textContent = totalCost.toLocaleString('fa-IR') + ' تومان';
-            document.getElementById(`result-${deviceId}`).classList.add('active');
+            // اگر تایمر متوقف شده، تاریخچه را پاک می‌کنیم
+            if (!timer.running) {
+                timer.controllerHistory = [];
+            }
         }
 
         // تابع ریست دستگاه
@@ -773,6 +800,8 @@
             timer.elapsed = 0;
             timer.intervalId = null;
             timer.running = false;
+            timer.controllerHistory = [];
+            timer.totalCost = 0;
             
             // ریست نمایش تایمر
             document.getElementById(`timer-${deviceId}`).textContent = '00:00:00';
